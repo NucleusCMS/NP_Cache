@@ -7,7 +7,7 @@ class NP_Cache extends NucleusPlugin {
 	var $initialized;
 	
 	public function getName()        { return 'Cache plugin'; }
-	public function getVersion()     { return '0.14'; }
+	public function getVersion()     { return '0.15'; }
 	public function getDescription() { return 'The structure like MODX'; }
 	public function getURL()         { return 'http://japan.nucleuscms.org/'; }
 	public function getAuthor()      { return 'Yamamoto'; }
@@ -71,14 +71,21 @@ class NP_Cache extends NucleusPlugin {
 	public function getUaType()
 	{
 		$ua = strtolower($_SERVER['HTTP_USER_AGENT']);
+		
 		if(strpos($ua, 'ipad')!==false)          $type = 'tablet';
 		elseif(strpos($ua, 'iphone')!==false)    $type = 'smartphone';
-		elseif(strpos($ua, 'android')!==false)   $type = 'smartphone';
+		elseif(strpos($ua, 'android')!==false)
+		{
+			if(strpos($ua, 'mobile')!==false)    $type = 'smartphone';
+			else                                 $type = 'tablet';
+		}
 		elseif(strpos($ua, 'windows phone')!==false)
 		                                         $type = 'smartphone';
 		elseif(strpos($ua, 'docomo')!==false)    $type = 'mobile';
 		elseif(strpos($ua, 'softbank')!==false)  $type = 'mobile';
-		else                                     $type = 'other';
+		elseif(strpos($ua, 'up.browser')!==false)
+			                                     $type = 'mobile';
+		else                                     $type = 'default';
 		
 		return $type;
 	}
