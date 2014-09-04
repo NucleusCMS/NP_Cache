@@ -61,6 +61,17 @@ class NP_Cache extends NucleusPlugin {
 		{
 			if(defined('_CHARSET')) $charset = _CHARSET;
 			$content = file_get_contents($this->cache_path);
+			
+			if(strpos($content,'<%BenchMark%>')!==false && function_exists('coreSkinVar')) // For Nucleus v3.70
+			{
+				$rs = coreSkinVar('<%BenchMark%>');
+				$content = str_replace('<%BenchMark%>', $rs, $content);
+			}
+			if(strpos($content,'<%DebugInfo%>')!==false && function_exists('coreSkinVar')) // For Nucleus v3.70
+			{
+				$rs = coreSkinVar('<%DebugInfo%>');
+				$content = str_replace('<%DebugInfo%>', $rs, $content);
+			}
 			header("Content-Type: text/html; charset={$charset}");
 			echo $content;
 			exit;
