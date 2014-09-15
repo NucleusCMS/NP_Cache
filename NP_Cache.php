@@ -86,6 +86,7 @@ class NP_Cache extends NucleusPlugin {
 		
 		if(strpos($ua, 'ipad')!==false)          $type = 'tablet';
 		elseif(strpos($ua, 'iphone')!==false)    $type = 'smartphone';
+		elseif(strpos($ua, 'ipod')!==false)      $type = 'smartphone';
 		elseif(strpos($ua, 'android')!==false)
 		{
 			if(strpos($ua, 'mobile')!==false)    $type = 'smartphone';
