@@ -55,15 +55,16 @@ class NP_Cache extends NucleusPlugin {
 		if($expire<time()) $this->purgeCache();
 		
 		$uaType = $this->getUaType();
-		$file_name = md5(serverVar('REQUEST_URI') . ':' . $uaType);
+		$file_name = md5(serverVar('REQUEST_URI') . ":{$uaType}");
 		$this->cache_path = "{$this->cache_dir}{$file_name}.inc";
 		if(is_file($this->cache_path))
 		{
 			if(defined('_CHARSET')) $charset = _CHARSET;
 			$content = file_get_contents($this->cache_path);
 			
-			if(strpos($content,'<%BenchMark%>')!==false && function_exists('coreSkinVar')) // For Nucleus v3.70
+			if(strpos($content,md5('<%BenchMark%>'))!==false && function_exists('coreSkinVar')) // For Nucleus v3.70
 			{
+				$content = str_replace(md5('<%BenchMark%>'),'<%BenchMark%>', $content);
 				$rs = coreSkinVar('<%BenchMark%>');
 				$content = str_replace('<%BenchMark%>', $rs, $content);
 			}
@@ -132,6 +133,7 @@ class NP_Cache extends NucleusPlugin {
 		global $admin;
 		if($admin->action) $action = " (action:{$admin->action})";
 		else               $action = '';
+		
 		$AddLog = $this->getOption('AddLog');
 		if($AddLog==='yes') ACTIONLOG::add(INFO, "Remove cache files({$deleted} files){$action}");
 	}
