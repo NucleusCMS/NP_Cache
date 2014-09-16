@@ -57,8 +57,14 @@ class NP_Cache extends NucleusPlugin {
 		$uaType = $this->getUaType();
 		$file_name = md5(serverVar('REQUEST_URI') . ":{$uaType}");
 		$this->cache_path = "{$this->cache_dir}{$file_name}.inc";
-		if(is_file($this->cache_path))
-		{
+
+        $cacheLife = $this->getOption('CacheLife');
+        $filemtime = filemtime($this->cache_path);
+
+        if (!$filemtime or (time() - $filemtime >= $cacheLife * 60))
+            ob_start();
+        else
+        {
 			if(defined('_CHARSET')) $charset = _CHARSET;
 			$content = file_get_contents($this->cache_path);
 			
@@ -77,7 +83,6 @@ class NP_Cache extends NucleusPlugin {
 			echo $content;
 			exit;
 		}
-		else ob_start();
 	}
 	
 	public function getUaType()
@@ -252,6 +257,9 @@ class NP_Cache extends NucleusPlugin {
 		
 		$AddLog = $this->getOption('AddLog');
 		if(!$AddLog) $this->createOption('AddLog', 'Add logs', 'yesno', 'no');
+
+		$CacheLife = $this->getOption('CacheLife');
+		if(!$CacheLife) $this->createOption('CacheLife', 'Individual cache expire cycle (Minutes).<br />Set 0 for no expiration.', 'text', '0', 'datatype=numerical');
 	}
 	
 	public function event_PostAddComment(&$data)    { $this->purgeCache(); }
