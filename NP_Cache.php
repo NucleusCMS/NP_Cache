@@ -259,7 +259,8 @@ class NP_Cache extends NucleusPlugin {
 		if(!$AddLog) $this->createOption('AddLog', 'Add logs', 'yesno', 'no');
 
 		$CacheLife = $this->getOption('CacheLife');
-		if(!$CacheLife) $this->createOption('CacheLife', 'Individual cache expire cycle (Minutes).<br />Set 0 for no expiration.', 'text', '0', 'datatype=numerical');
+		if(empty($CacheLife)&&$CacheLife!=='0')
+			$this->createOption('CacheLife', 'Individual cache expire cycle (Minutes).<br />Set 0 for no expiration.', 'text', '0', 'datatype=numerical');
 	}
 	
 	public function event_PostAddComment(&$data)    { $this->purgeCache(); }
