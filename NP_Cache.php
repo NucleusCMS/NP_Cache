@@ -55,7 +55,9 @@ class NP_Cache extends NucleusPlugin {
 		if($expire<time()) $this->purgeCache();
 		
 		$deviceType = $this->getDeviceType();
-		$file_name = md5(serverVar('REQUEST_URI') . ":{$deviceType}");
+		
+		$file_name = $deviceType . '-' . md5(':'.serverVar('REQUEST_URI'));
+		
 		$this->cache_path = "{$this->cache_dir}{$file_name}.inc";
 
         $cacheLife = $this->getOption('CacheLife');
