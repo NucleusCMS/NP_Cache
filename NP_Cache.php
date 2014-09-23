@@ -119,7 +119,7 @@ class NP_Cache extends NucleusPlugin {
 		elseif(strpos($ua, 'softbank')!==false)  $type = 'mobile';
 		elseif(strpos($ua, 'up.browser')!==false)
 			                                     $type = 'mobile';
-		else                                     $type = 'default';
+		else                                     $type = 'pc';
 		
 		return $type;
 	}
