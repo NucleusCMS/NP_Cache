@@ -54,8 +54,8 @@ class NP_Cache extends NucleusPlugin {
 		extract($params);
 		if($expire<time()) $this->purgeCache();
 		
-		$uaType = $this->getUaType();
-		$file_name = md5(serverVar('REQUEST_URI') . ":{$uaType}");
+		$deviceType = $this->getDeviceType();
+		$file_name = md5(serverVar('REQUEST_URI') . ":{$deviceType}");
 		$this->cache_path = "{$this->cache_dir}{$file_name}.inc";
 
         $cacheLife = $this->getOption('CacheLife');
@@ -85,7 +85,7 @@ class NP_Cache extends NucleusPlugin {
 		}
 	}
 	
-	public function getUaType()
+	public function getDeviceType()
 	{
 		$ua = strtolower($_SERVER['HTTP_USER_AGENT']);
 		
