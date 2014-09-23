@@ -254,12 +254,19 @@ class NP_Cache extends NucleusPlugin {
 	public function checkOption($action='')
 	{
 		if($action!=='pluginlist') return;
-		
-		$AddLog = $this->getOption('AddLog');
-		if(!$AddLog) $this->createOption('AddLog', 'Add logs', 'yesno', 'no');
-
-		$CacheLife = $this->getOption('CacheLife');
-		if(empty($CacheLife)&&$CacheLife!=='0')
+		$vs = array(sql_table('plugin_option_desc'), $this->getID());
+		$rs = sql_query(vsprintf("SELECT * FROM %s WHERE opid=%s AND ocontext='global'", $vs));
+		$option = array();
+		if($rs)
+		{
+			while($row = sql_fetch_assoc($rs))
+			{
+				$option[$row['oname']] = $row['oid'];
+			}
+		}
+		if(!isset($option['AddLog']))
+			$this->createOption('AddLog', 'Add logs', 'yesno', 'no');
+		if(!isset($option['CacheLife']))
 			$this->createOption('CacheLife', 'Individual cache expire cycle (Minutes).<br />Set 0 for no expiration.', 'text', '0', 'datatype=numerical');
 	}
 	
