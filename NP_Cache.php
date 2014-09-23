@@ -59,11 +59,25 @@ class NP_Cache extends NucleusPlugin {
 		$file_name = $deviceType . '-' . md5(':'.serverVar('REQUEST_URI'));
 		
 		$this->cache_path = "{$this->cache_dir}{$file_name}.inc";
-
-        $cacheLife = $this->getOption('CacheLife');
-        $filemtime = filemtime($this->cache_path);
-
-        if (!$filemtime or (time() - $filemtime >= $cacheLife * 60))
+		
+		$readFromCache = false;
+        if(is_file($this->cache_path))
+		{
+			$cacheLife = $this->getOption('CacheLife');
+			if(preg_match('@^[0-9]+$@',$cacheLife))
+        	{
+        		$cacheLife = $cacheLife * 60;
+        		$pastTime = time() - filemtime($this->cache_path);
+        		if(0<$cacheLife && $cacheLife < $pastTime)
+        			unlink($this->cache_path);
+        		else
+        			$readFromCache = true;
+			}
+			else
+				$readFromCache = true;
+        }
+        
+        if ($readFromCache === false)
             ob_start();
         else
         {
